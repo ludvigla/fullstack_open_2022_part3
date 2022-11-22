@@ -47,17 +47,18 @@ const generateId = () => {
 app.post("/api/persons", (request, response) => {
   const body = request.body;
 
-  if (!body.name) {
+  if (!body.name | !body.number) {
     return response.status(400).json({
-      error: "name missing",
+      error: "Name or number is missing",
     });
   }
 
-  if (!body.number) {
+  const checkifNameExists = persons.find((person) => person.name === body.name);
+  if (checkifNameExists) {
     return response.status(400).json({
-      error: "number missing",
-    });
-  }
+        error: "Name already exists in phonebook",
+    })
+  }   
 
   const person = {
     name: body.name,
