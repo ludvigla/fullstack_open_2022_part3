@@ -1,1 +1,1 @@
-Link to fly.io notebook app: https://helsinkifsp3.fly.dev/
+Link to fly.io notebook app: https://helsinkifs.fly.dev/

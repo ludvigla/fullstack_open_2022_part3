@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
 
 let persons = [ 
     { 
@@ -24,10 +25,33 @@ let persons = [
     }
 ]
 
-//app.use(express.static('build'))
-//const cors = require('cors')
-//app.use(cors())
+//const morgan = require('morgan')
+
 app.use(express.json())
+
+//app.use(morgan('tiny'))
+
+app.use(cors())
+
+app.use(express.static('build'))
+
+
+// Middleware
+/* const logger = morgan(function (tokens, req, res) {
+  let message = [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms'
+  ].join(' ')
+  let body = req.body;
+  if (tokens.method(req, res) === "POST") {
+    message += `\n${JSON.stringify(body)}`;
+  }
+  return message
+})
+app.use(logger) */
 
 app.get('/', (request, response) => {
     response.send('<h1>Welcome to the phonebook REST? api</h1>')
@@ -92,7 +116,13 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
-const PORT = process.env.PORT || "8080"
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

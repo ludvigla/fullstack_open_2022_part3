@@ -6,7 +6,11 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:ui": "rm -rf build && cd ../helsinki_fullstack/part2/phonebook/ && npm run build && cp -r build ../../../helsinki_fullstack_part3/",
+    "deploy": "fly deploy",
+    "deploy:full": "npm run build:ui && npm run deploy",    
+    "logs:prod": "fly logs"
   },
   "repository": {
     "type": "git",
@@ -14,7 +18,6 @@
   },
   "author": "Ludvig Larsson",
   "license": "MIT",
-  "homepage": "https://github.com/ludvigla/fullstack_open_2022_part3#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",

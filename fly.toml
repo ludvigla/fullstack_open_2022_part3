@@ -1,6 +1,6 @@
-# fly.toml file generated for helsinkifsp3 on 2022-11-29T14:41:00+01:00
+# fly.toml file generated for helsinkifs on 2022-11-29T19:32:00+01:00
 
-app = "helsinkifsp3"
+app = "helsinkifs"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
@@ -37,6 +37,3 @@ processes = []
     interval = "15s"
     restart_limit = 0
     timeout = "2s"
-    
-[build]
-  builtin = "static"
