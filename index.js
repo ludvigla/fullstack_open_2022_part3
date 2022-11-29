@@ -24,8 +24,11 @@ let persons = [
     }
 ]
 
-var morgan = require('morgan')
+const morgan = require('morgan')
+const cors = require('cors')
+
 app.use(express.json())
+app.use(cors())
 
 // Middleware
 const logger = morgan(function (tokens, req, res) {
