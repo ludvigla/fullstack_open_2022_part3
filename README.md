@@ -1,1 +1,1 @@
-# fullstack_open_2022_part3
+Link to fly.io notebook app: https://helsinkifsp3.fly.dev/
