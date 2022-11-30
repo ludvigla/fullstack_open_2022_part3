@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(cors())
 
 app.get('/', (request, response) => {
-    response.send('<h1>Welcome to the phonebook REST? api</h1>')
+  response.send('<h1>Welcome to the phonebook REST? api</h1>')
 })
 
 app.get('/api/persons', (request, response) => {
@@ -20,14 +20,14 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-    const date = new Date()
-    Person.find({}).then(result => {
-      response.send(`<p>Phonebook has info for ${result.length} people</p><p>${date}</p>`)
-    })
+  const date = new Date()
+  Person.find({}).then(result => {
+    response.send(`<p>Phonebook has info for ${result.length} people</p><p>${date}</p>`)
+  })
 })
 
 app.post('/api/persons', (request, response, next) => {
-  const {name, number} = request.body
+  const { name, number } = request.body
 
   if (name === undefined | number === undefined) {
     return response.status(400).json({ error: 'Name or number is missing' })
@@ -38,7 +38,7 @@ app.post('/api/persons', (request, response, next) => {
     number: number
   })
 
-  Person.find({name: newPerson.name})
+  Person.find({ name: newPerson.name })
     .then(person => {
       if (person.length > 0) {
         return response.status(400).json({ error: 'Person is already in phonebook' }).end()
@@ -70,7 +70,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 // Delete person
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
@@ -85,10 +85,10 @@ app.put('/api/persons/:id', (request, response, next) => {
   const { name, number } = request.body
 
   Person.findByIdAndUpdate(
-      request.params.id, 
-      { name, number }, 
-      { new: true, runValidators: true, context: 'query' }
-    )
+    request.params.id,
+    { name, number },
+    { new: true, runValidators: true, context: 'query' }
+  )
     .then(updatedPerson => {
       response.json(updatedPerson)
     })
@@ -114,6 +114,7 @@ const errorHandler = (error, request, response, next) => {
 // Already present in solution to exercise 3.15
 app.use(errorHandler)
 
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
