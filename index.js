@@ -2,12 +2,12 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const Person = require('./models/person')
-const cors = require('cors')
+//const cors = require('cors')
 
 // Middleware
-app.use(express.json())
-app.use(cors())
+//app.use(cors())
 app.use(express.static('build'))
+app.use(express.json())
 
 app.get('/', (request, response) => {
     response.send('<h1>Welcome to the phonebook REST? api</h1>')
@@ -29,33 +29,6 @@ const generateId = () => {
     return randId 
 }
 
-/* app.post("/api/persons", (request, response) => {
-  const body = request.body;
-
-  if (!body.name | !body.number) {
-    return response.status(400).json({
-      error: "Name or number is missing",
-    });
-  }
-
-  const checkifNameExists = persons.find((person) => person.name === body.name);
-  if (checkifNameExists) {
-    return response.status(400).json({
-        error: "Name already exists in phonebook",
-    })
-  }   
-
-  const person = {
-    name: body.name,
-    number: body.number,
-    id: generateId(),
-  };
-
-  persons = persons.concat(person);
-
-  response.json(person);
-}); */
-
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
@@ -73,24 +46,47 @@ app.post('/api/persons', (request, response) => {
   })
 })
 
-app.get('/api/persons/:id', (request, response) => {
-  Person.findById(request.params.id).then(person => {
-    response.json(person)
-  })
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+    .then(person => {
+      //response.json(person)
+      if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    persons = persons.filter(person => person.id !== id)
-
-    response.status(204).end()
+// Delete person
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
 
+// handler of requests with unknown endpoint
 app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+
+  next(error)
+}
+
+// handler of requests with malformatted id
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
