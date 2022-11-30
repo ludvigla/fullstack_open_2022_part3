@@ -9,12 +9,12 @@ const password = process.argv[2]
 
 const url = `mongodb+srv://fullstack:${password}@cluster0.g2t0pxf.mongodb.net/phonebookApp?retryWrites=true&w=majority`
 
-const noteSchema = new mongoose.Schema({
+const personSchema = new mongoose.Schema({
   name: String,
   number: String
 })
 
-const Person = mongoose.model('Person', noteSchema)
+const Person = mongoose.model('Person', personSchema)
 
 if (process.argv.length === 3) {
     mongoose.connect(url);
