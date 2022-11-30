@@ -29,7 +29,7 @@ const generateId = () => {
     return randId 
 }
 
-app.post("/api/persons", (request, response) => {
+/* app.post("/api/persons", (request, response) => {
   const body = request.body;
 
   if (!body.name | !body.number) {
@@ -54,8 +54,24 @@ app.post("/api/persons", (request, response) => {
   persons = persons.concat(person);
 
   response.json(person);
-});
+}); */
 
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+
+  if (body.name === undefined | body.number === undefined) {
+    return response.status(400).json({ error: 'Name or number is missing' })
+  }
+
+  const person = new Person({
+    name: body.name,
+    number: body.number
+  })
+
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
+})
 
 app.get('/api/persons/:id', (request, response) => {
   Person.findById(request.params.id).then(person => {
