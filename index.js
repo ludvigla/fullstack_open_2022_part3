@@ -27,21 +27,31 @@ app.get('/info', (request, response) => {
 })
 
 app.post('/api/persons', (request, response, next) => {
-  const body = request.body
+  const {name, number} = request.body
 
-  if (body.name === undefined | body.number === undefined) {
+  if (name === undefined | number === undefined) {
     return response.status(400).json({ error: 'Name or number is missing' })
   }
 
-  const person = new Person({
-    name: body.name,
-    number: body.number
+  const newPerson = new Person({
+    name: name,
+    number: number
   })
 
-  person.save().then(savedPerson => {
-    response.json(savedPerson)
-  })
-  .catch(error => next(error))
+  Person.find({name: newPerson.name})
+    .then(person => {
+      if (person.length > 0) {
+        return response.status(400).json({ error: 'Person is already in phonebook' }).end()
+      } else {
+        newPerson.save()
+          .then(savedPerson => {
+            response.json(savedPerson)
+          })
+          .catch(error => next(error))
+      }
+    })
+    .catch(error => next(error))
+
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
