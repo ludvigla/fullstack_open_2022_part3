@@ -5,7 +5,6 @@ const Person = require('./models/person')
 //const cors = require('cors')
 
 // Middleware
-//app.use(cors())
 app.use(express.static('build'))
 app.use(express.json())
 
@@ -86,6 +85,7 @@ const errorHandler = (error, request, response, next) => {
 }
 
 // handler of requests with malformatted id
+// Already present in solution to exercise 3.15
 app.use(errorHandler)
 
 const PORT = process.env.PORT
